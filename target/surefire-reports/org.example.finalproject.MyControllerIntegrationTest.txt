@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+Test set: org.example.finalproject.MyControllerIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 4.596 s <<< FAILURE! -- in org.example.finalproject.MyControllerIntegrationTest
+org.example.finalproject.MyControllerIntegrationTest.testGetEndpoint -- Time elapsed: 1.459 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting actual:
+  "[{"username":"user1","password":"password123"},{"username":"user1","password":"password123"}]"
+to contain:
+  "expected content" 
+	at org.example.finalproject.MyControllerIntegrationTest.testGetEndpoint(FinalProjectApplicationTests.java:23)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
