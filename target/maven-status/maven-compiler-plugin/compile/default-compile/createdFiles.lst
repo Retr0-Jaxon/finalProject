@@ -1,0 +1,9 @@
+org\example\finalproject\service\TaskService.class
+org\example\finalproject\FinalProjectApplication.class
+org\example\finalproject\controller\IcsFileController.class
+org\example\finalproject\model\Task.class
+org\example\finalproject\service\IndexService.class
+org\example\finalproject\model\TaskIndex.class
+org\example\finalproject\controller\IndexController.class
+org\example\finalproject\controller\TaskController.class
+org\example\finalproject\service\IcsFileService.class
