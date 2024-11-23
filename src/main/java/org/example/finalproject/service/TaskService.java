@@ -1,5 +1,7 @@
-package org.example.finalproject;
+package org.example.finalproject.service;
 
+import org.example.finalproject.model.Task;
+//import org.example.finalproject.service.IndexService;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -8,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class TaskService {
      *
      * 
      */
-    public Task createTask_Local(Task task) {
+    public Task createTask_Local(Task task) throws IOException {
         // 数据验证逻辑
         if (task == null || task.gettask_Id() == null || task.gettask_Id().isEmpty()) {
             throw new IllegalArgumentException("Task name cannot be null or empty");
@@ -41,10 +42,10 @@ public class TaskService {
         List<Task> tasks;
 
         // 检查文件是否存在
-        if (Files.exists(Paths.get(fileName))) {
+        if (Files.exists(Paths.get("data", fileName)) && Files.size(Paths.get("data", fileName)) > 0) {
             try {
                 // 读取现有任务
-                Task[] existingTasks = objectMapper.readValue(new File(fileName), Task[].class);
+                Task[] existingTasks = objectMapper.readValue(new File("data", fileName), Task[].class);
                 tasks = new ArrayList<>(List.of(existingTasks));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -59,7 +60,7 @@ public class TaskService {
 
         // 写回JSON文件
         try {
-            objectMapper.writeValue(new File(fileName), tasks);
+            objectMapper.writeValue(new File("data", fileName), tasks);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to save task as JSON", e);
@@ -68,14 +69,14 @@ public class TaskService {
         return task;
     }
 
-    private void checkDuplicateTaskId(Task task) {
+    private void checkDuplicateTaskId(Task task) throws IOException {
         String fileName = task.getindex_Id() + ".json";
-        if (Files.exists(Paths.get(fileName))) {
+        if (Files.exists(Paths.get(fileName)) && Files.size(Paths.get(fileName)) > 0) {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             try {
-                List<Task> existingTasks = List.of(objectMapper.readValue(new File(fileName), Task[].class));
+                List<Task> existingTasks = List.of(objectMapper.readValue(new File("data",fileName), Task[].class));
                 for (Task existingTask : existingTasks) {
                     if (existingTask.gettask_Id().equals(task.gettask_Id())) {
                         throw new IllegalArgumentException("Task ID already exists for this index");
@@ -95,7 +96,7 @@ public class TaskService {
      * @param index_Id 索引 ID
      */
     public void deleteTaskByIdFromJson(String task_Id, String index_Id) {
-        String fileName = index_Id + ".json";
+        String fileName = "data/" + index_Id + ".json";
         // 读取 JSON 文件
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -118,22 +119,22 @@ public class TaskService {
         }
     }
 
-    public List<Task> syncIndex(String index_Id) {
-        String fileName = index_Id + ".json";
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        List<Task> tasks = new ArrayList<>();
-    
-        try {
-            // Read the existing task list from the JSON file
-            Task[] existingTasks = objectMapper.readValue(new File(fileName), Task[].class);
-            tasks = new ArrayList<>(List.of(existingTasks));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to read tasks from file", e);
-        }
-    
-        return tasks;
-    }
+//    public List<Task> syncIndex(String index_Id) {
+//        String fileName = "data/" + index_Id + ".json";
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.registerModule(new JavaTimeModule());
+//        List<Task> tasks = new ArrayList<>();
+//
+//        try {
+//            // Read the existing task list from the JSON file
+//            Task[] existingTasks = objectMapper.readValue(new File(fileName), Task[].class);
+//            tasks = List.of(existingTasks);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Failed to read tasks from file", e);
+//        }
+//
+//        return tasks;
+//    }
 
 }

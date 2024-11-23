@@ -1,6 +1,4 @@
-package org.example.finalproject;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+package org.example.finalproject.model;
 
 import java.time.LocalDate;
 
