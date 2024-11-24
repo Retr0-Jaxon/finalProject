@@ -82,7 +82,6 @@ public class IndexService {
                 }
             }
         }
-
         return fileNames;
     }
 }
