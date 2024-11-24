@@ -29,4 +29,9 @@ public class IndexController {
     public List<Task> getIndex(@RequestParam String index_Id) {
         return indexService.syncIndex(index_Id);
     }
+
+    @GetMapping("/getall")
+    public List<String> getAllIndices(){
+        return indexService.getAllIndices();
+    }
 }

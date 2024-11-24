@@ -70,4 +70,19 @@ public class IndexService {
     }
 
 
+    public List<String> getAllIndices() {
+        File folder = new File("data");
+        File[] listOfFiles = folder.listFiles();
+        List<String> fileNames = new ArrayList<>();
+
+        if (listOfFiles != null) {
+            for (File file : listOfFiles) {
+                if (file.isFile()) {
+                    fileNames.add(file.getName());
+                }
+            }
+        }
+
+        return fileNames;
+    }
 }
