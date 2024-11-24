@@ -5,9 +5,12 @@ import org.example.finalproject.model.Task;
 import org.example.finalproject.model.TaskIndex;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -52,6 +55,15 @@ public class IndexService {
     }
 
     public List<Task> syncIndex(String index_Id) {
+        File lastUseJson = new File("lastUse/lastUse.json");
+        if (lastUseJson.exists()) {
+            try (FileWriter fileWriter = new FileWriter(lastUseJson)) {
+                fileWriter.write("");
+                fileWriter.write(index_Id); // 清空文件内容
+            } catch (IOException e) {
+                throw new RuntimeException("无法清空文件: " + lastUseJson.getName(), e);
+            }
+        }
         String fileName = "data/" + index_Id + ".json";
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -73,6 +85,12 @@ public class IndexService {
     public List<String> getAllIndices() {
         File folder = new File("data");
         File[] listOfFiles = folder.listFiles();
+        String lastUseage;
+        try {
+            lastUseage = new String(Files.readAllBytes(Paths.get("lastUse/lastUse.json")));
+        } catch (IOException e) {
+            throw new RuntimeException("无法读取文件: lastUse/lastUse.json", e);
+        }
         List<String> fileNames = new ArrayList<>();
 
         if (listOfFiles != null) {
@@ -82,6 +100,36 @@ public class IndexService {
                 }
             }
         }
+        fileNames.add(lastUseage);
         return fileNames;
+    }
+
+    public ResponseEntity<String> rename(String index_Id, String newName){
+        try {
+            File oldFile = new File("data/" + index_Id + ".json");
+            File newFile = new File("data/" + newName + ".json");
+            if (oldFile.exists() && !newFile.exists()) {
+                if (oldFile.renameTo(newFile)) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.registerModule(new JavaTimeModule());
+                    try {
+                        List<Task> tasks = objectMapper.readValue(newFile, new TypeReference<List<Task>>() {});
+                        for (Task task : tasks) {
+                            task.setindex_Id(newName);
+                        }
+                        objectMapper.writeValue(newFile, tasks);
+                    } catch (IOException e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update tasks in file: " + e.getMessage());
+                    }
+                    return ResponseEntity.ok("File renamed successfully");
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to rename file");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File does not exist or new file name already taken");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 }
