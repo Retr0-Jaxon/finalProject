@@ -21,11 +21,13 @@ public class Task {
 
     private int status;
 
+    private String details;
+
     // Constructors
     public Task() {
     }
 
-    public Task(Long id,String task_Id, String index_Id, LocalDateTime start_Date, LocalDateTime end_Date, Integer priority, int status) {
+    public Task(Long id,String task_Id, String index_Id, LocalDateTime start_Date, LocalDateTime end_Date, Integer priority, int status, String details) {
         this.id = id;
         this.task_Id = task_Id;
         this.index_Id = index_Id;
@@ -33,6 +35,7 @@ public class Task {
         this.end_Date = end_Date;
         this.priority = priority;
         this.status = status;
+        this.details = details;
     }
 
     // Getters and Setters
@@ -91,6 +94,14 @@ public class Task {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     // toString method for easy printing

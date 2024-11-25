@@ -5,5 +5,6 @@
   "start_Date" : "2024/11/25 00:00:00",
   "end_Date" : "2024/11/26 00:00:00",
   "priority" : 1,
-  "status" : 0
+  "status" : 0,
+  "details": "This is a test task"
 } ]
