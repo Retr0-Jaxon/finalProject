@@ -19,13 +19,13 @@ public class Task {
 
     private Integer priority;
 
-    private boolean status;
+    private int status;
 
     // Constructors
     public Task() {
     }
 
-    public Task(Long id,String task_Id, String index_Id, LocalDateTime start_Date, LocalDateTime end_Date, Integer priority, boolean status) {
+    public Task(Long id,String task_Id, String index_Id, LocalDateTime start_Date, LocalDateTime end_Date, Integer priority, int status) {
         this.id = id;
         this.task_Id = task_Id;
         this.index_Id = index_Id;
@@ -85,11 +85,11 @@ public class Task {
         this.priority = priority;
     }
 
-    public boolean getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

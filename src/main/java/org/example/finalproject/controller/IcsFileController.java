@@ -70,7 +70,7 @@ public class IcsFileController {
                         LocalDateTime startDate = event.getStartDate() != null ? event.getStartDate().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
 //                        System.out.println(event.getStartDate());
                         LocalDateTime endDate = event.getEndDate() != null ? event.getEndDate().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
-                        return new Task(id,summary + category, index_Id, startDate, endDate, 2, false);
+                        return new Task(id,summary + category, index_Id, startDate, endDate, 2, 0);
                     })
                     .collect(Collectors.toList());
 
