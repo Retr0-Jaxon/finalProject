@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class Task {
 
+    private Long id;
     private String task_Id;
 
     private String index_Id;
@@ -24,7 +25,8 @@ public class Task {
     public Task() {
     }
 
-    public Task(String task_Id, String index_Id, LocalDateTime start_Date, LocalDateTime end_Date, Integer priority, boolean status) {
+    public Task(Long id,String task_Id, String index_Id, LocalDateTime start_Date, LocalDateTime end_Date, Integer priority, boolean status) {
+        this.id = id;
         this.task_Id = task_Id;
         this.index_Id = index_Id;
         this.start_Date = start_Date;
@@ -34,6 +36,15 @@ public class Task {
     }
 
     // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String gettask_Id() {
         return task_Id;
     }

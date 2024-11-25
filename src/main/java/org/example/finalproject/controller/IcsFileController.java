@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @RestController
@@ -60,12 +61,16 @@ public class IcsFileController {
             List<Task> tasks = icsFileService.parseIcsFile(response.body())
                     .stream()
                     .map(event -> {
+                        // 创建一个id
+                        long now = System.currentTimeMillis() / 1000;
+                        int randomPart = ThreadLocalRandom.current().nextInt(10000);
+                        Long id = now + randomPart;
                         String summary = event.getSummary() != null ? event.getSummary().getValue() : "";
                         String category = event.getProperty(Property.CATEGORIES) != null ? event.getProperty(Property.CATEGORIES).getValue() : "";
                         LocalDateTime startDate = event.getStartDate() != null ? event.getStartDate().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
 //                        System.out.println(event.getStartDate());
                         LocalDateTime endDate = event.getEndDate() != null ? event.getEndDate().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
-                        return new Task(summary + category, index_Id, startDate, endDate, 2, false);
+                        return new Task(id,summary + category, index_Id, startDate, endDate, 2, false);
                     })
                     .collect(Collectors.toList());
 
