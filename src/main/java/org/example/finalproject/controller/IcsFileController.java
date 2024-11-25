@@ -16,6 +16,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -45,7 +48,13 @@ public class IcsFileController {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             IndexService indexService = new IndexService();
-            indexService.createIndex(index_Id);
+            Path indexPath = Paths.get("data", index_Id + ".json");
+            if (!Files.exists(indexPath)) {
+                indexService.createIndex(index_Id);
+            } else {
+                indexService.deleteIndex(index_Id);
+                indexService.createIndex(index_Id);
+            }
 
             // 解析 ICS 文件内容
             List<Task> tasks = icsFileService.parseIcsFile(response.body())
@@ -65,7 +74,9 @@ public class IcsFileController {
 
             return new ResponseEntity<>(tasks, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            IndexService indexService = new IndexService();
+            List<Task> Localtasks = indexService.syncIndex(index_Id);
+            return new ResponseEntity<>(Localtasks,HttpStatus.BAD_REQUEST);
         }
     }
 }

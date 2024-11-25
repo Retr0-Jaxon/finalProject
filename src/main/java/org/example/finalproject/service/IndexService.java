@@ -5,6 +5,7 @@ import org.example.finalproject.model.Task;
 import org.example.finalproject.model.TaskIndex;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -55,11 +56,12 @@ public class IndexService {
     }
 
     public List<Task> syncIndex(String index_Id) {
+        //更新lastuse
         File lastUseJson = new File("lastUse/lastUse.json");
         if (lastUseJson.exists()) {
             try (FileWriter fileWriter = new FileWriter(lastUseJson)) {
-                fileWriter.write("");
-                fileWriter.write(index_Id); // 清空文件内容
+                fileWriter.write("");// 清空文件内容
+                fileWriter.write(index_Id);
             } catch (IOException e) {
                 throw new RuntimeException("无法清空文件: " + lastUseJson.getName(), e);
             }
@@ -70,12 +72,19 @@ public class IndexService {
         List<Task> tasks = new ArrayList<>();
 
         try {
-            // Read the existing task list from the JSON file
-            Task[] existingTasks = objectMapper.readValue(new File(fileName), Task[].class);
-            tasks = new ArrayList<>(List.of(existingTasks));
+            Path path = Paths.get(fileName);
+            if (Files.exists(path) && Files.size(path) != 0) {
+                byte[] jsonData = Files.readAllBytes(path);
+                Task[] existingTasks = objectMapper.readValue(jsonData, Task[].class);
+                if (existingTasks != null && existingTasks.length > 0) {
+                    tasks = new ArrayList<>(List.of(existingTasks));
+                }
+            } else {
+                return tasks;
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to read tasks from file", e);
+            throw new RuntimeException("Read File Failed", e);
         }
 
         return tasks;
@@ -108,10 +117,12 @@ public class IndexService {
         try {
             File oldFile = new File("data/" + index_Id + ".json");
             File newFile = new File("data/" + newName + ".json");
+            
             if (oldFile.exists() && !newFile.exists()) {
                 if (oldFile.renameTo(newFile)) {
                     ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.registerModule(new JavaTimeModule());
+                    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
                     try {
                         List<Task> tasks = objectMapper.readValue(newFile, new TypeReference<List<Task>>() {});
                         for (Task task : tasks) {
