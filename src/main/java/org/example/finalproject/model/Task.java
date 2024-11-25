@@ -1,6 +1,8 @@
 package org.example.finalproject.model;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 
 public class Task {
 
@@ -8,11 +10,11 @@ public class Task {
 
     private String index_Id;
 
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private LocalDate start_Date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss")
+    private LocalDateTime start_Date;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate end_Date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss")
+    private LocalDateTime end_Date;
 
     private Integer priority;
 
@@ -22,7 +24,7 @@ public class Task {
     public Task() {
     }
 
-    public Task(String task_Id, String index_Id, LocalDate start_Date, LocalDate end_Date, Integer priority, boolean status) {
+    public Task(String task_Id, String index_Id, LocalDateTime start_Date, LocalDateTime end_Date, Integer priority, boolean status) {
         this.task_Id = task_Id;
         this.index_Id = index_Id;
         this.start_Date = start_Date;
@@ -48,19 +50,19 @@ public class Task {
         this.index_Id = index_Id;
     }
 
-    public LocalDate getstart_Date() {
+    public LocalDateTime getstart_Date() {
         return start_Date;
     }
 
-    public void setstart_Date(LocalDate start_Date) {
+    public void setstart_Date(LocalDateTime start_Date) {
         this.start_Date = start_Date;
     }
 
-    public LocalDate getend_Date() {
+    public LocalDateTime getend_Date() {
         return end_Date;
     }
 
-    public void setend_Date(LocalDate end_Date) {
+    public void setend_Date(LocalDateTime end_Date) {
         this.end_Date = end_Date;
     }
 
