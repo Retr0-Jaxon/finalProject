@@ -67,6 +67,19 @@ public class TaskController {
         }
     }
 
+    /**
+     * Update an existing task by ID
+     *
+     * @param id the ID of the task to update
+     * @param updatedTask the new task data
+     * @return ResponseEntity with the updated task
+     */
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Task> updateTask(@RequestBody Task updatedTask) {
+        Task task = taskService.updateTask(updatedTask.getId(), updatedTask);
+        return ResponseEntity.ok(task);
+    }
+
 //    @PostMapping("/sync")
 //    public ResponseEntity<String> syncIndex(@RequestBody String index_Id) {
 //        try {

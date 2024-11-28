@@ -119,6 +119,82 @@ public class TaskService {
         }
     }
 
+    /**
+     * Update a task by its ID
+     *
+     * @param id the ID of the task to update
+     * @param updatedTask the new task data
+     * @return the updated task
+     */
+    public Task updateTask(Long id, Task updatedTask) {
+        // Retrieve the existing task by ID
+        Task existingTask = findTask(updatedTask);
+        if (existingTask == null) {
+            throw new IllegalArgumentException("Task with ID " + id + " not found");
+        }
+
+        deleteTaskByIdFromJson(existingTask.gettask_Id(),existingTask.getindex_Id());
+        // Save the updated task
+        saveTask(updatedTask);
+
+        return updatedTask;
+    }
+
+    /**
+     * Find a task by its ID
+     * @return the task if found, null otherwise
+     */
+    private Task findTask(Task updatedTask) {
+        // Implement logic to find a task by ID
+        // This can involve querying a database or searching in a file
+        String fileName = "data/" + updatedTask.getindex_Id() + ".json";
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        try {
+            Task[] existingTasks = objectMapper.readValue(new File(fileName), Task[].class);
+            for (Task existingTask : existingTasks) {
+                if (existingTask.getId().equals(updatedTask.getId())) {
+                    return existingTask;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; // Placeholder for actual implementation
+    }
+
+    /**
+     * Save the task
+     *
+     * @param task the task to save
+     */
+    private void saveTask(Task task) {
+        // Implement logic to save the task
+        // This can involve updating a database record or writing to a file
+        String fileName = "data/" + task.getindex_Id() + ".json";
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        List<Task> tasks;
+        try {
+            // 读取现有任务列表
+            Task[] existingTasks = objectMapper.readValue(new File(fileName), Task[].class);
+            tasks = new ArrayList<>(List.of(existingTasks));
+
+            // 删除指定 task_Id 的任务
+            tasks.removeIf(t -> t.gettask_Id().equals(task.gettask_Id()));
+
+            // 添加新任务
+            tasks.add(task);
+
+            // 写回 JSON 文件
+            objectMapper.writeValue(new File(fileName), tasks);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 //    public List<Task> syncIndex(String index_Id) {
 //        String fileName = "data/" + index_Id + ".json";
 //        ObjectMapper objectMapper = new ObjectMapper();
