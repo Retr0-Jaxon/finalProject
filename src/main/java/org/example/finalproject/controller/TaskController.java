@@ -70,11 +70,10 @@ public class TaskController {
     /**
      * Update an existing task by ID
      *
-     * @param id the ID of the task to update
      * @param updatedTask the new task data
      * @return ResponseEntity with the updated task
      */
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     public ResponseEntity<Task> updateTask(@RequestBody Task updatedTask) {
         Task task = taskService.updateTask(updatedTask.getId(), updatedTask);
         return ResponseEntity.ok(task);
