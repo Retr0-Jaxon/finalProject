@@ -92,10 +92,10 @@ public class TaskService {
     /**
      * 从 JSON 文件中根据 task_Id 删除任务
      *
-     * @param task_Id 要删除的任务的 ID
+     * @param id 要删除的任务的 ID
      * @param index_Id 索引 ID
      */
-    public void deleteTaskByIdFromJson(String task_Id, String index_Id) {
+    public void deleteTaskByIdFromJson(Long id, String index_Id) {
         String fileName = "data/" + index_Id + ".json";
         // 读取 JSON 文件
         ObjectMapper objectMapper = new ObjectMapper();
@@ -109,7 +109,7 @@ public class TaskService {
             tasks = new ArrayList<>(List.of(existingTasks));
 
             // 删除指定 task_Id 的任务
-            tasks.removeIf(task -> task_Id.equals(task.gettask_Id()));
+            tasks.removeIf(task -> id.equals(task.getId()));
 
             // 写回 JSON 文件
             objectMapper.writeValue(new File(fileName), tasks);
@@ -133,7 +133,7 @@ public class TaskService {
             throw new IllegalArgumentException("Task with ID " + id + " not found");
         }
 
-        deleteTaskByIdFromJson(existingTask.gettask_Id(),existingTask.getindex_Id());
+        deleteTaskByIdFromJson(existingTask.getId(),existingTask.getindex_Id());
         // Save the updated task
         saveTask(updatedTask);
 
