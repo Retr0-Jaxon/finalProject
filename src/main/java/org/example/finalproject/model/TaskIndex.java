@@ -7,8 +7,6 @@ public class TaskIndex {
     private String name; // Index Name
     private List<Task> tasks = new ArrayList<>(); // List of Tasks
 
-    public TaskIndex() {}
-
     public TaskIndex(String name) {
         this.name = name;
     }

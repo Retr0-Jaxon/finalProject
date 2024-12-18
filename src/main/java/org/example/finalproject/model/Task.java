@@ -44,16 +44,8 @@ public class Task {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String gettask_Id() {
         return task_Id;
-    }
-
-    public void settask_Id(String task_Id) {
-        this.task_Id = task_Id;
     }
 
     public String getindex_Id() {
@@ -62,6 +54,11 @@ public class Task {
 
     public void setindex_Id(String index_Id) {
         this.index_Id = index_Id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getstart_Date() {
@@ -104,16 +101,5 @@ public class Task {
         this.details = details;
     }
 
-    // toString method for easy printing
-//    @Override
-//    public String toString() {
-//        return "Task{" +
-//                "task_Id='" + task_Id + '\'' +
-//                ", index_Id='" + index_Id + '\'' +
-//                ", start_Date=" + start_Date +
-//                ", end_Date=" + end_Date +
-//                ", priority='" + priority + '\'' +
-//                ", status='" + status + '\'' +
-//                '}';
-//    }
+
 }

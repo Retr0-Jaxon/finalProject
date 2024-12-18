@@ -80,17 +80,5 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-//    @PostMapping("/sync")
-//    public ResponseEntity<String> syncIndex(@RequestBody String index_Id) {
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            objectMapper.registerModule(new JavaTimeModule());
-//            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-//            List<Task> tasks = taskService.syncIndex(index_Id);
-//            String json = objectMapper.writeValueAsString(tasks);
-//            return ResponseEntity.ok(json);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sync task: " + e.getMessage());
-//        }
-//    }
+
 }

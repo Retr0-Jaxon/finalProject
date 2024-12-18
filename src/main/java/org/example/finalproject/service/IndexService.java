@@ -118,12 +118,14 @@ public class IndexService {
             File oldFile = new File("data/" + index_Id + ".json");
             File newFile = new File("data/" + newName + ".json");
             
-            if (oldFile.exists() && !newFile.exists()) {
-                if (oldFile.renameTo(newFile)) {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    objectMapper.registerModule(new JavaTimeModule());
-                    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            if ((oldFile.exists() && !newFile.exists()) || Files.size(oldFile.toPath()) == 0) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.registerModule(new JavaTimeModule());
+                objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+                if (Files.size(oldFile.toPath()) > 0) {
                     try {
+                        oldFile.renameTo(newFile);
                         List<Task> tasks = objectMapper.readValue(newFile, new TypeReference<List<Task>>() {});
                         for (Task task : tasks) {
                             task.setindex_Id(newName);
@@ -132,6 +134,9 @@ public class IndexService {
                     } catch (IOException e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update tasks in file: " + e.getMessage());
                     }
+                    return ResponseEntity.ok("File renamed successfully");
+                } else if (Files.size(oldFile.toPath()) == 0) {
+                    oldFile.renameTo(newFile);
                     return ResponseEntity.ok("File renamed successfully");
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to rename file");
