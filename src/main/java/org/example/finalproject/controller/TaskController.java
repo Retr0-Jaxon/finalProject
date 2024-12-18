@@ -57,10 +57,10 @@ public class TaskController {
         return ResponseEntity.badRequest().body(errors.toString());
     }
 
-    @DeleteMapping("/{index_Id}/{task_Id}")
-    public ResponseEntity<String> deleteTask(@PathVariable String index_Id, @PathVariable String task_Id) {
+    @DeleteMapping("/{index_Id}/{id}")
+    public ResponseEntity<String> deleteTask(@PathVariable String index_Id, @PathVariable Long id) {
         try {
-            taskService.deleteTaskByIdFromJson(task_Id, index_Id);
+            taskService.deleteTaskByIdFromJson(id, index_Id);
             return ResponseEntity.ok("Task deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete task: " + e.getMessage());
@@ -70,11 +70,10 @@ public class TaskController {
     /**
      * Update an existing task by ID
      *
-     * @param id the ID of the task to update
      * @param updatedTask the new task data
      * @return ResponseEntity with the updated task
      */
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     public ResponseEntity<Task> updateTask(@RequestBody Task updatedTask) {
         Task task = taskService.updateTask(updatedTask.getId(), updatedTask);
         return ResponseEntity.ok(task);
